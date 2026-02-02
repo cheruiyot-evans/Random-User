@@ -1,3 +1,4 @@
+import { getElement } from './utils/getElement.js';
 const URL = 'https://randomuser.me/api/';
 
 const fetchUser = async () => {
@@ -12,12 +13,13 @@ const fetchUser = async () => {
 };
 
 const displayUser = (list) => {
-  const { name, location } = list.results[0];
+  const { name, location, picture } = list.results[0];
+  const { large: img } = picture;
   const { title, first, last } = name;
   console.log(list.results);
   const user = `
  <img
-          src="https://randomuser.me/api/portraits/men/75.jpg"
+          src="${img}"
           alt="random user"
           class="user-img"
         />
@@ -52,7 +54,7 @@ const displayUser = (list) => {
             <span class="fas fa-user-lock"></span>
           </button>
  `;
-  const container = document.querySelector('.container');
+  const container = getElement('.container');
   container.innerHTML = user;
 };
 
