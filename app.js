@@ -1,66 +1,54 @@
 import { getElement } from './utils/getElement.js';
-const URL = 'https://randomuser.me/api/';
+import getUser from './utils/fetchUser.js';
 
-const fetchUser = async () => {
-  try {
-    const response = await fetch(URL);
-    const data = await response.json();
-    return data;
-    console.log(data);
-  } catch (error) {
-    console.log(error);
-  }
+const img = getElement('.user-img');
+const title = getElement('.user-title');
+const value = getElement('.user-value');
+const btn = getElement('.btn');
+const btns = [...document.querySelectorAll('.icon')];
+
+const displayUser = (person) => {
+  img.src = person.image;
+  value.textContent = person.name;
+  title.textContent = `My name is`;
+  btns[0].classList.add('active');
+  btns.map((btn) => {
+    const label = btn.dataset.label;
+    if (label === 'name') {
+      btn.addEventListener('click', () => {
+        value.textContent = person.name;
+      });
+    } else if (label === 'email') {
+      btn.addEventListener('click', () => {
+        value.textContent = person.email;
+      });
+    } else if (label === 'street') {
+      btn.addEventListener('click', () => {
+        value.textContent = person.street;
+      });
+    } else if (label === 'age') {
+      btn.addEventListener('click', () => {
+        value.textContent = person.age;
+      });
+    } else if (label === 'phone') {
+      btn.addEventListener('click', () => {
+        value.textContent = person.phone;
+      });
+    } else if (label === 'password') {
+      btn.addEventListener('click', () => {
+        value.textContent = person.password;
+      });
+    }
+  });
 };
 
-const displayUser = (list) => {
-  const { name, location, picture } = list.results[0];
-  const { large: img } = picture;
-  const { title, first, last } = name;
-  console.log(list.results);
-  const user = `
- <img
-          src="${img}"
-          alt="random user"
-          class="user-img"
-        />
-        <p class="user-title">My name is</p>
-        <p class="user-value">${title} ${first} ${last}</p>
-        <div class="values-list">
-          <!-- single icon -->
-          <button class="icon active" data-label="name">
-            <span class="far fa-user"></span>
-          </button>
-          <!-- end of single icon -->
-          <button class="icon" data-label="email">
-            <span class="far fa-envelope-open"></span>
-          </button>
-          <!-- single icon -->
-          <button class="icon" data-label="age">
-            <span class="far fa-calendar-times"></span>
-          </button>
-          <!-- end of single icon -->
-          <!-- single icon -->
-          <button class="icon" data-label="street">
-            <span class="far fa-map"></span>
-          </button>
-          <!-- end of single icon -->
-          <!-- single icon -->
-          <button class="icon active" data-label="phone">
-            <span class="fas fa-phone"></span>
-          </button>
-          <!-- end of single icon -->
-          <!-- single icon -->
-          <button class="icon active" data-label="password">
-            <span class="fas fa-user-lock"></span>
-          </button>
- `;
-  const container = getElement('.container');
-  container.innerHTML = user;
+// show user
+const showUser = async () => {
+  const person = await getUser();
+  // get user from api
+  displayUser(person);
+  // display user
 };
 
-const start = async () => {
-  const data = await fetchUser();
-  displayUser(data);
-};
-
-start();
+window.addEventListener('DOMContentLoaded', showUser);
+btn.addEventListener('click', showUser);
